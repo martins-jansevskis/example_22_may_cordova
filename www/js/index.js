@@ -54,8 +54,29 @@ var app = {
                 correctOrientation: true  //Corrects Android orientation quirks
             }
             return options;
-        }
-    },
+        };
+
+        var srcType = Camera.PictureSourceType.CAMERA;
+        var options = setOptions(srcType);
+        //var func = createNewFileEntry;
+
+        navigator.camera.getPicture(function cameraSuccess(imageUri) {
+            console.log("picture taken", imageUri);
+                displayImage(imageUri);
+                // You may choose to copy the picture, save it somewhere, or upload.
+                //func(imageUri);
+
+            }, function cameraError(error) {
+                console.debug("Unable to obtain picture: " + error, "app");
+
+            }, options);
+
+            function displayImage(imgUri) {
+
+                var elem = document.getElementById('myImage');
+                elem.src = imgUri;
+            }
+        },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
