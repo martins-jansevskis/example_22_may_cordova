@@ -33,60 +33,29 @@ var app = {
         var scope = this;
         var takePicBtn = document.getElementById('takeAPic');
         takePicBtn.onclick = function() {
-          // onclick stuff
-          console.log("take picture");
+          // Take picture on click
           scope.takePictureFunction();
         }
     },
 
     takePictureFunction: function() {
-        console.log("at least it is working until here");
-        function setOptions(srcType) {
-            var options = {
-                // Some common settings are 20, 50, and 100
+        navigator.camera.getPicture(onSuccess, onFail, {
                 quality: 50,
-                destinationType: Camera.DestinationType.FILE_URI,
-                // In this app, dynamically set the picture source, Camera or photo gallery
-                sourceType: srcType,
-                encodingType: Camera.EncodingType.JPEG,
-                mediaType: Camera.MediaType.PICTURE,
-                allowEdit: true,
-                correctOrientation: true  //Corrects Android orientation quirks
-            }
-            return options;
-        };
+                destinationType: Camera.DestinationType.DATA_URL
+            });
 
-        var srcType = Camera.PictureSourceType.CAMERA;
-        var options = setOptions(srcType);
-        //var func = createNewFileEntry;
+            function onSuccess(imageData) {
+                var image = document.getElementById('myImage');
+                image.src = "data:image/jpeg;base64," + imageData;
+            };
 
-        navigator.camera.getPicture(function cameraSuccess(imageUri) {
-            console.log("picture taken", imageUri);
-                displayImage(imageUri);
-                // You may choose to copy the picture, save it somewhere, or upload.
-                //func(imageUri);
-
-            }, function cameraError(error) {
-                console.debug("Unable to obtain picture: " + error, "app");
-
-            }, options);
-
-            function displayImage(imgUri) {
-
-                var elem = document.getElementById('myImage');
-                elem.src = imgUri;
-            }
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            };
         },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
         console.log('Received Event: ' + id);
     }
 };
