@@ -28,6 +28,13 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        console.log(navigator.camera);
+
+        var takePicBtn = document.getElementById('takeAPic');
+        takePicBtn.onclick = function() {
+          // onclick stuff
+          console.log("take picture");
+        }
     },
 
     // Update DOM on a Received Event
