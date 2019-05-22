@@ -48,7 +48,8 @@ var app = {
         console.log("select file on click");
         navigator.camera.getPicture(onSuccess, onFail, {
             quality: 50,
-            destinationType: Camera.DestinationType.PHOTOLIBRARY
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM
         });
 
         function onSuccess(imageData) {
