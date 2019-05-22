@@ -35,7 +35,30 @@ var app = {
         takePicBtn.onclick = function() {
           // Take picture on click
           scope.takePictureFunction();
-        }
+        };
+
+        var secondBtn = document.getElementById('selectFile');
+        secondBtn.onclick = function() {
+            console.log("clicked");
+            scope.selectFile();
+        };
+    },
+
+    selectFile: function() {
+        console.log("select file on click");
+        navigator.camera.getPicture(onSuccess, onFail, {
+            quality: 50,
+            destinationType: Camera.DestinationType.PHOTOLIBRARY
+        });
+
+        function onSuccess(imageData) {
+            var image = document.getElementById('myImage');
+            image.src = "data:image/jpeg;base64," + imageData;
+        };
+
+        function onFail(message) {
+            alert('Failed because: ' + message);
+        };
     },
 
     takePictureFunction: function() {
