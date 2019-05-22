@@ -42,6 +42,65 @@ var app = {
             console.log("clicked");
             scope.selectFile();
         };
+
+        var thirdBtn =  document.getElementById('doSomethingWithFile');
+        thirdBtn.onclick = function() {
+            console.log("clicked");
+            scope.doSomethingElseWithFile();
+        };
+    },
+
+    doSomethingElseWithFile: function() {
+        console.log("third option");
+        navigator.camera.getPicture(onSuccess, onFail, {
+            quality: 50,
+            destinationType: Camera.DestinationType.FILE_URL,
+            sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM
+        });
+
+        function onSuccess(imageData) {
+            // var image = document.getElementById('myImage');
+            // image.src = "data:image/jpeg;base64," + imageData;
+            getFileEntry(imageData)
+        };
+
+        function onFail(message) {
+            alert('Failed because: ' + message);
+        };
+
+        function getFileEntry(imgUri) {
+            console.log("create new file entry", imgUri);
+            window.resolveLocalFileSystemURL(imgUri, function success(fileEntry) {
+
+                // Do something with the FileEntry object, like write to it, upload it, etc.
+                // writeFile(fileEntry, imgUri);
+                console.log("got file: " + fileEntry.fullPath);
+                // displayFileData(fileEntry.nativeURL, "Native URL");
+
+            }, function () {
+              // If don't get the FileEntry (which may happen when testing
+              // on some emulators), copy to a new FileEntry.
+                createNewFileEntry(imgUri);
+            });
+        };
+
+        function createNewFileEntry(imgUri) {
+            window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
+
+                // JPEG file
+                dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
+
+                    // Do something with it, like write to it, upload it, etc.
+                    // writeFile(fileEntry, imgUri);
+                    console.log("got file: " + fileEntry.fullPath);
+                    // displayFileData(fileEntry.fullPath, "File copied to");
+
+                }, onErrorCreateFile);
+
+            }, function(e){
+                console.log("onErrorResolveUrl", e);
+            });
+        }
     },
 
     selectFile: function() {
